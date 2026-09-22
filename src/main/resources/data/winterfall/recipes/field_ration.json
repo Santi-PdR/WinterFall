@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [{"item":"minecraft:beetroot"},{"item":"minecraft:bread"},{"item":"minecraft:dried_kelp"}],
+  "result": {"item":"winterfall:field_ration","count":2}
+}

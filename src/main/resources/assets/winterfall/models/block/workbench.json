@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "up": "winterfall:block/workbench_top",
+    "down": "winterfall:block/workbench",
+    "north": "winterfall:block/workbench",
+    "south": "winterfall:block/workbench",
+    "east": "winterfall:block/workbench",
+    "west": "winterfall:block/workbench",
+    "particle": "winterfall:block/workbench"
+  }
+}

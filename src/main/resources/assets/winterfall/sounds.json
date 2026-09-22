@@ -1,0 +1,10 @@
+{
+  "weapon.melee_light": {"subtitle": "subtitle.winterfall.melee_light", "sounds": []},
+  "weapon.melee_heavy": {"subtitle": "subtitle.winterfall.melee_heavy", "sounds": []},
+  "weapon.fire": {"subtitle": "subtitle.winterfall.fire", "sounds": []},
+  "weapon.reload": {"subtitle": "subtitle.winterfall.reload", "sounds": []},
+  "impact.flesh": {"subtitle": "subtitle.winterfall.impact", "sounds": []},
+  "impact.headshot": {"subtitle": "subtitle.winterfall.headshot", "sounds": []},
+  "scavenger.alert": {"subtitle": "subtitle.winterfall.scavenger", "sounds": []},
+  "ambient.storm": {"subtitle": "subtitle.winterfall.storm", "sounds": []}
+}
