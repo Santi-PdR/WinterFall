@@ -35,7 +35,7 @@ Result: `BUILD SUCCESSFUL` (8 actionable tasks). Java compilation has four Forge
 ## Remaining work
 
 - Supply original `.ogg` audio assets listed in `AUDIO_ASSETS.md`; gameplay currently uses intentional vanilla fallbacks.
-- Add bespoke entity renderer/model and more enemy variants/boss types as the content roster grows.
+- Add a bespoke entity renderer/model and seven additional enemy archetypes; this first iteration registers one fully functional Combat Knife Scavenger and the wave framework is ready for variants.
 - Expand data generation providers and add automated gameplay tests in later iterations.
 
 ## Git

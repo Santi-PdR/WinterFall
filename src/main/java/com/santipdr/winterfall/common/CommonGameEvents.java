@@ -64,6 +64,7 @@ public final class CommonGameEvents {
     @SubscribeEvent
     public static void wounds(LivingHurtEvent event) {
         if (!event.getEntity().level().isClientSide && event.getEntity() instanceof Player player && event.getAmount() >= 7.0F) {
+            if (WinterFallPlayerData.perk(player) == Perk.SENTINEL) event.setAmount(event.getAmount() * .85F);
             int duration = WinterFallPlayerData.perk(player) == Perk.FIELD_MEDIC ? 180 : 280;
             player.addEffect(new MobEffectInstance(ModEffects.WOUNDED.get(), duration, 0));
         }
