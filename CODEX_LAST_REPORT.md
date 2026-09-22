@@ -41,6 +41,6 @@ Result: `BUILD SUCCESSFUL` (8 actionable tasks). Java compilation has four Forge
 ## Git
 
 - Current branch: `codex/winterfall-primary`
-- Commits: `90497d6 feat: bootstrap WinterFall Forge survival combat mod`.
+- Commits: initial feature commit `90497d6 feat: bootstrap WinterFall Forge survival combat mod`; follow-up documentation and Sentinel-perk fixes are present in this branch history.
 - Push: completed to `origin/codex/winterfall-primary`.
 - Recommended next step: play-test in an integrated Forge client/server and tune combat, wave pacing and asset presentation.
