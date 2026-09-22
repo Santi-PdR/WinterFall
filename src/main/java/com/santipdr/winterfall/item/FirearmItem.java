@@ -18,7 +18,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class FirearmItem extends Item {
     private static final String ROUNDS = "winterfall_rounds";
@@ -31,6 +35,13 @@ public class FirearmItem extends Item {
 
     public FirearmProfile profile() {
         return profile;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        tooltip.add(Component.translatable("tooltip.winterfall.firearm_damage", profile.bodyDamage(), profile.headshotDamage()));
+        tooltip.add(Component.translatable("tooltip.winterfall.firearm_magazine", profile.magazineSize(), profile.rpm()));
+        tooltip.add(Component.translatable("tooltip.winterfall.firearm_ammo", profile.ammoItem().getDescription()));
     }
 
     public int rounds(ItemStack stack) {
@@ -64,9 +75,10 @@ public class FirearmItem extends Item {
     private void fire(ServerPlayer player, ItemStack stack) {
         setRounds(stack, rounds(stack) - 1);
         float spread = profile.spreadDegrees() * (WinterFallPlayerData.perk(player) == Perk.MARKSMAN ? 0.60F : 1.0F);
-        LivingEntity target = CombatSystem.aimedTarget(player, profile.range(), spread);
-        if (target != null) {
-            boolean headshot = CombatSystem.isHeadshot(target, target.getEyePosition());
+        CombatSystem.AimedHit hit = CombatSystem.aimedHit(player, profile.range(), spread);
+        if (hit != null) {
+            LivingEntity target = hit.target();
+            boolean headshot = CombatSystem.isHeadshot(target, hit.location());
             float damage = (headshot ? profile.headshotDamage() : profile.bodyDamage()) * WinterFallConfig.GLOBAL_DAMAGE_MULTIPLIER.get().floatValue();
             target.hurt(player.damageSources().playerAttack(player), damage);
             if (headshot) target.addEffect(new MobEffectInstance(ModEffects.STUNNED.get(), 18, 0));

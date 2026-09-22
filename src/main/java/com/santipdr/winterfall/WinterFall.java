@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.santipdr.winterfall.config.WinterFallConfig;
 import com.santipdr.winterfall.network.ModNetworking;
 import com.santipdr.winterfall.registry.ModBlocks;
+import com.santipdr.winterfall.registry.ModCreativeTabs;
 import com.santipdr.winterfall.registry.ModEffects;
 import com.santipdr.winterfall.registry.ModEntityTypes;
 import com.santipdr.winterfall.registry.ModItems;
@@ -22,6 +23,7 @@ public final class WinterFall {
     public WinterFall() {
         var modBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModItems.ITEMS.register(modBus);
+        ModCreativeTabs.TABS.register(modBus);
         ModBlocks.BLOCKS.register(modBus);
         ModEffects.EFFECTS.register(modBus);
         ModEntityTypes.ENTITY_TYPES.register(modBus);

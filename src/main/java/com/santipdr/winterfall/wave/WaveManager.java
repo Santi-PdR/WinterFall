@@ -31,6 +31,15 @@ public final class WaveManager {
         });
     }
 
+    public static void stop(ServerLevel level) {
+        WinterFallWaveData data = data(level);
+        data.stop();
+        level.players().forEach(player -> {
+            player.displayClientMessage(Component.literal("WinterFall wave stopped."), false);
+            ModNetworking.sendToPlayer(player, packet(data));
+        });
+    }
+
     public static void tick(ServerLevel level) {
         WinterFallWaveData data = data(level);
         if (!data.active()) return;

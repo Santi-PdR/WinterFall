@@ -1,4 +1,5 @@
 {
+  "itemGroup.winterfall": "WINTERFALL",
   "item.winterfall.short_ammo": "Short Ammo",
   "item.winterfall.long_ammo": "Long Ammo",
   "item.winterfall.shotgun_shell": "Shotgun Shell",
@@ -47,5 +48,11 @@
   "message.winterfall.wave_cleared": "Wave %s survived. Scavenge and prepare.",
   "hud.winterfall.stamina": "STA %s / %s",
   "hud.winterfall.survival": "THIRST %s  //  MORALE %s",
-  "hud.winterfall.salvage": "SALVAGE %s"
+  "hud.winterfall.salvage": "SALVAGE %s",
+  "tooltip.winterfall.melee_damage": "Light %.1f  |  Heavy %.1f",
+  "tooltip.winterfall.melee_stamina": "Stamina %.0f  |  Heavy %.0f",
+  "tooltip.winterfall.melee_reach": "Reach %.1f",
+  "tooltip.winterfall.firearm_damage": "Damage %.1f  |  Headshot %.1f",
+  "tooltip.winterfall.firearm_magazine": "Magazine %s  |  %s RPM",
+  "tooltip.winterfall.firearm_ammo": "Ammo: %s"
 }

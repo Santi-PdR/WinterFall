@@ -49,3 +49,28 @@ for i,name in enumerate(ITEMS):
     (ROOT/"models/item"/f"{name}.json").write_text(json.dumps({"parent":"minecraft:item/generated","textures":{"layer0":f"winterfall:item/{name}"}},indent=2)+"\n")
 for i,name in enumerate(["scrapper","workbench","workbench_top"]):
     png(ROOT/"textures/block"/f"{name}.png", texture(i,True))
+
+# A distinct 64px humanoid skin: cold-grey coat, leather harness, red scarf and worn steel mask.
+mob = [[(0, 0, 0, 0) for _ in range(64)] for _ in range(64)]
+for y in range(64):
+    for x in range(64):
+        mob[y][x] = (48, 58, 63, 255) if (x * 5 + y * 3) % 9 else (35, 43, 48, 255)
+# Head / mask (front face texture area)
+for y in range(8, 16):
+    for x in range(8, 16):
+        mob[y][x] = (139, 153, 156, 255) if (x + y) % 4 else (73, 88, 94, 255)
+for x in range(9, 15):
+    mob[11][x] = (172, 46, 44, 255)
+# Body coat and harness
+for y in range(20, 32):
+    for x in range(20, 28):
+        mob[y][x] = (49, 66, 75, 255) if (x + y) % 5 else (79, 101, 108, 255)
+for x in range(20, 28):
+    mob[24][x] = (111, 74, 46, 255)
+for y in range(20, 32):
+    mob[y][24] = (31, 36, 39, 255)
+# Arms / legs receive muted industrial cloth panels
+for y in range(20, 32):
+    for x in list(range(44, 48)) + list(range(4, 8)):
+        mob[y][x] = (61, 77, 82, 255) if (x + y) % 3 else (37, 48, 53, 255)
+png(ROOT/"textures/entity/combat_knife_scavenger.png", mob, 64, 64)

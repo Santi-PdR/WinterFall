@@ -12,7 +12,11 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class MeleeWeaponItem extends Item {
     private final MeleeProfile profile;
@@ -24,6 +28,13 @@ public class MeleeWeaponItem extends Item {
 
     public MeleeProfile profile() {
         return profile;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        tooltip.add(Component.translatable("tooltip.winterfall.melee_damage", profile.lightDamage(), profile.heavyDamage()));
+        tooltip.add(Component.translatable("tooltip.winterfall.melee_stamina", profile.staminaCost(), profile.heavyStaminaCost()));
+        tooltip.add(Component.translatable("tooltip.winterfall.melee_reach", profile.reach()));
     }
 
     @Override

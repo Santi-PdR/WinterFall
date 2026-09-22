@@ -1,46 +1,43 @@
-# WinterFall — implementation report
+# WinterFall — stabilization report (September 22, 2026)
 
-## What was implemented
+## Crash investigation and fix
 
-- Initialized a complete Forge 1.20.1 / Forge 47.4.10 / Java 17 project, including a reproducible Gradle wrapper.
-- Added an extensible package layout for common gameplay, client HUD, configuration, networking, registries, entities, weapons, perks, survival, salvage, waves and utilities.
-- Implemented server-authoritative persisted player state for stamina, thirst, morale, salvage and perk selection, with synchronized client HUD packets.
-- Added 11 melee weapons, 7 firearms, three ammo classes, a blueprint-driven 100-Salvage Artisan's Billhook, ration and canteen.
-- Added light/heavy melee, stamina costs, backstab multiplier, bleeding, wounds, stun, reloadable magazines, RPM cooldowns, hitscan firearm damage and headshot feedback.
-- Added Scrapper and Workbench block interactions, a station menu registry, recipes and loot tables.
-- Added Combat Knife Scavenger AI (80 HP, melee navigation and bleeding) plus scalable wave state, storm exposure, a Wave 10 elite encounter preparation, and developer commands under `/winterfall`.
-- Added original deterministic 32px pixel-art textures, item/block models, localization, blockstates, sound-event manifest and audio replacement documentation.
+The real instance log at `~/.sklauncher/instances/test-1/logs/latest.log` identified the root cause:
 
-## Important files
-
-- `build.gradle`, `settings.gradle`, `gradle.properties`, `gradlew`, `gradle/wrapper/*`
-- `src/main/java/com/santipdr/winterfall/`
-- `src/main/resources/assets/winterfall/`
-- `src/main/resources/data/winterfall/`
-- `tools/generate_winterfall_assets.py`
-- `AUDIO_ASSETS.md`, `README.md`
-
-## Compilation
-
-Validated successfully on September 22, 2026 with:
-
-```bash
-export JAVA_HOME=/usr/lib/jvm/java-17-temurin-jdk
-export PATH="$JAVA_HOME/bin:$PATH"
-./gradlew clean build
+```text
+java.lang.NullPointerException: ... EntityRenderer ... because "entityrenderer" is null
+at EntityRenderDispatcher
 ```
 
-Result: `BUILD SUCCESSFUL` (8 actionable tasks). Java compilation has four Forge 1.20.1 deprecation warnings only; no compilation errors.
+`CombatKnifeScavenger` had valid registration, constructor, attributes, goals and spawn egg, but no client entity renderer was registered. When the client attempted to render it, Forge resolved a `null` renderer.
 
-## Remaining work
+Fixed with a client-only `CombatKnifeScavengerRenderer`, `ClientModEvents` registration through `EntityRenderersEvent.RegisterRenderers`, and an original entity texture. The registration is protected by `Dist.CLIENT`, so dedicated servers do not load rendering classes.
 
-- Supply original `.ogg` audio assets listed in `AUDIO_ASSETS.md`; gameplay currently uses intentional vanilla fallbacks.
-- Add a bespoke entity renderer/model and seven additional enemy archetypes; this first iteration registers one fully functional Combat Knife Scavenger and the wave framework is ready for variants.
-- Expand data generation providers and add automated gameplay tests in later iterations.
+## Improvements made
+
+- Added the ordered `WINTERFALL` creative tab for every currently registered WinterFall item.
+- Added useful melee and firearm statistic tooltips.
+- Corrected firearm headshots to use the actual server-side hitscan intersection rather than the target eye position.
+- Added `/winterfall wave stop`, `/winterfall injury bleeding|wounded|clear <target>`, and `/winterfall morale set <target> <0-100>`.
+
+## Validation
+
+`./gradlew clean build` completed successfully with Forge 47.4.10 / Minecraft 1.20.1 / Java 17.
+
+`runClient` was launched after the fix. It completed WinterFall mod discovery, client event subscription and resource-pack loading without a WinterFall exception. It was intentionally stopped after 45 seconds by the test timeout; manual in-world spawn-egg validation is the next test.
+
+## Remaining known scope
+
+- Combat Knife Scavenger is render-safe, but the seven additional requested enemy archetypes and bespoke models remain a content phase.
+- Original `.ogg` files listed in `AUDIO_ASSETS.md` remain pending; vanilla fallbacks are intentional.
+- Datagen providers, specialized station UI, expanded scavenging loot and wave compositions remain pending.
 
 ## Git
 
-- Current branch: `codex/winterfall-primary`
-- Commits: initial feature commit `90497d6 feat: bootstrap WinterFall Forge survival combat mod`; follow-up documentation and Sentinel-perk fixes are present in this branch history.
-- Push: completed to `origin/codex/winterfall-primary`.
-- Recommended next step: play-test in an integrated Forge client/server and tune combat, wave pacing and asset presentation.
+- Branch: `codex/winterfall-primary`
+- This stabilization stage is pending commit and push.
+- `AI_WORKSPACE.md` remains intentionally unmodified and uncommitted.
+
+## Next priority
+
+Install this jar in the test instance and verify the Spawn Egg and `/summon winterfall:combat_knife_scavenger` in a fresh test world, then continue enemy and wave content.

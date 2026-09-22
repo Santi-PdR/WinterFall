@@ -16,7 +16,14 @@ import net.minecraft.world.phys.Vec3;
 public final class CombatSystem {
     private CombatSystem() {}
 
+    public record AimedHit(LivingEntity target, Vec3 location) {}
+
     public static LivingEntity aimedTarget(Player player, double range, double spreadDegrees) {
+        AimedHit hit = aimedHit(player, range, spreadDegrees);
+        return hit == null ? null : hit.target();
+    }
+
+    public static AimedHit aimedHit(Player player, double range, double spreadDegrees) {
         Vec3 start = player.getEyePosition();
         Vec3 look = player.getLookAngle();
         if (spreadDegrees > 0.0D) {
@@ -27,7 +34,7 @@ public final class CombatSystem {
         AABB search = player.getBoundingBox().expandTowards(look.scale(range)).inflate(1.2D);
         EntityHitResult hit = ProjectileUtil.getEntityHitResult(player, start, end, search,
                 entity -> entity instanceof LivingEntity living && living.isAlive() && entity != player && entity.isPickable(), 0.0D);
-        return hit != null && hit.getEntity() instanceof LivingEntity living ? living : null;
+        return hit != null && hit.getEntity() instanceof LivingEntity living ? new AimedHit(living, hit.getLocation()) : null;
     }
 
     public static void heavyAttack(ServerPlayer player, float reach, float damage, float knockback, float bleedChance) {
