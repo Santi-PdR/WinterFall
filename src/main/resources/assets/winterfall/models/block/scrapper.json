@@ -1,4 +1,12 @@
 {
-  "parent": "minecraft:block/cube_all",
-  "textures": {"all": "winterfall:block/scrapper"}
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "up": "winterfall:block/scrapper_top",
+    "down": "winterfall:block/scrapper_bottom",
+    "north": "winterfall:block/scrapper",
+    "south": "winterfall:block/scrapper",
+    "east": "winterfall:block/scrapper",
+    "west": "winterfall:block/scrapper",
+    "particle": "winterfall:block/scrapper"
+  }
 }
