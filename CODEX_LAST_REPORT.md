@@ -42,3 +42,9 @@ Fixed with a client-only `CombatKnifeScavengerRenderer`, `ClientModEvents` regis
 ## Next priority
 
 Install this jar in the test instance and verify the Spawn Egg and `/summon winterfall:combat_knife_scavenger` in a fresh test world, then continue enemy and wave content.
+
+## Install latest JAR
+
+```bash
+cd /home/Santipdr/Proyectos/WinterFall || exit 1; jar="$(find build/libs -maxdepth 1 -type f -iname 'winterfall-*.jar' ! -iname '*-sources.jar' ! -iname '*-javadoc.jar' ! -iname '*-dev.jar' ! -iname '*-slim.jar' -printf '%T@ %p\n' 2>/dev/null | sort -nr | head -n 1 | cut -d' ' -f2-)"; [ -n "$jar" ] && [ -f "$jar" ] || { echo "Error: no se encontró un JAR jugable de WinterFall en build/libs/."; exit 1; }; mods="/home/Santipdr/.sklauncher/instances/test-1/mods"; mkdir -p "$mods"; find "$mods" -maxdepth 1 -type f -iname 'winterfall-*.jar' -delete; cp "$jar" "$mods/"; echo "Instalado: $mods/$(basename "$jar")"
+```
