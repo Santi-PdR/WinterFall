@@ -33,7 +33,8 @@ Reviewed every registered item texture/model, both station block models, the Sca
 ## Git
 
 - Branch: `codex/winterfall-primary`
-- This visual overhaul is pending commit and push.
+- Visual overhaul commit: `060985d art: overhaul WinterFall item and station assets`.
+- Push completed to `origin/codex/winterfall-primary`.
 - `AI_WORKSPACE.md` remains unmodified and uncommitted.
 
 ## Next priority
