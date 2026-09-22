@@ -35,7 +35,8 @@ Fixed with a client-only `CombatKnifeScavengerRenderer`, `ClientModEvents` regis
 ## Git
 
 - Branch: `codex/winterfall-primary`
-- This stabilization stage is pending commit and push.
+- Stabilization commit: `560848e fix: register scavenger renderer and WinterFall tab`.
+- Push completed to `origin/codex/winterfall-primary`.
 - `AI_WORKSPACE.md` remains intentionally unmodified and uncommitted.
 
 ## Next priority
