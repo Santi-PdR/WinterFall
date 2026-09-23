@@ -199,6 +199,11 @@ tiles = [
     ((48,16),(79,145,164),(145,203,211),(35,76,89)),     # cold blue paint
 ]
 for (ox,oy), mid, hi, shadow in tiles:
+    # png() serializes RGBA pixels. The palette is intentionally declared as
+    # concise RGB triples above, so expand every atlas shade before writing.
+    # Writing the triples directly produced variable-width scanlines and a
+    # corrupt PNG that Minecraft correctly replaced with its magenta texture.
+    mid, hi, shadow = (tuple((*colour, 255)) for colour in (mid, hi, shadow))
     for y in range(16):
         for x in range(16):
             atlas[oy+y][ox+x] = mid

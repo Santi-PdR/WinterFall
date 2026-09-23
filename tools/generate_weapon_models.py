@@ -9,9 +9,12 @@ import json
 ROOT = Path(__file__).parents[1] / "src/main/resources/assets/winterfall/models/item"
 ATLAS = "winterfall:item/weapon_atlas"
 UV = {
-    "metal": [0, 0, 16, 16], "dark": [16, 0, 32, 16], "grip": [32, 0, 48, 16],
-    "wood": [48, 0, 64, 16], "rust": [0, 16, 16, 32], "warning": [16, 16, 32, 32],
-    "cloth": [32, 16, 48, 32], "blue": [48, 16, 64, 32]
+    # Minecraft JSON model UV coordinates are normalized to a 16×16 space,
+    # regardless of the source image pixel dimensions. Each atlas tile is
+    # 16×16 pixels in a 64×64 texture, thus occupying a 4×4 UV quadrant.
+    "metal": [0, 0, 4, 4], "dark": [4, 0, 8, 4], "grip": [8, 0, 12, 4],
+    "wood": [12, 0, 16, 4], "rust": [0, 4, 4, 8], "warning": [4, 4, 8, 8],
+    "cloth": [8, 4, 12, 8], "blue": [12, 4, 16, 8]
 }
 
 def cube(a, b, material="metal"):
