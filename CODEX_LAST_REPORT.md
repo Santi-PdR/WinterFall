@@ -1,45 +1,42 @@
-# WinterFall — visual overhaul report
+# WinterFall — deep visual reconstruction report
 
-## Assets audited
+## Last completed turn
 
-Reviewed every registered item texture/model, both station block models, the Scavenger texture and all current creative-tab content. The previous generator deliberately reused one generic steel silhouette across most entries; that was the source of the visually indistinguishable placeholder appearance.
+- Branch confirmed: `codex/winterfall-primary`.
+- Completed and pushed commit `0226c7c assets: rebuild WinterFall weapon visuals with 3D low-poly models and workbench`.
+- No new gameplay systems were added during this visual pass.
 
-## Replaced and improved
+## Assets rebuilt
 
-- Rewrote `tools/generate_winterfall_assets.py` as a bespoke original pixel-art generator.
-- Replaced all 25 item textures with individually designed 32px silhouettes and category-specific palettes.
-  - Ammo now has distinct pistol rounds, rifle rounds and red shotgun shell art.
-  - Blueprints use blue drafting grids and a red approval mark.
-  - Ration, canteen, spawn egg and every melee weapon now have distinct shapes/materials.
-  - Each firearm has an intentionally different receiver, stock/grip, barrel and accent treatment.
-- Rebuilt all item JSON models with category-appropriate `handheld`/`generated` parents and explicit first-person, third-person and ground display transforms.
-- Replaced Scrapper side/top/bottom resources with industrial panel, hazard-rust core and bolted-service textures; updated its cube model to use separate faces.
-- Reworked Workbench into wood, steel brace and blueprint-table textures.
-- Reworked the Combat Knife Scavenger 64px skin with masked visor, scarf, weathered coat, harness, gloves and boots.
-- Produced visual contact sheets during development to inspect sprite separation, stations and entity skin before building.
+- Added an original 64×64 `weapon_atlas.png` with cold steel, gunmetal, leather, worn wood, rust, warning-red, cloth and cold-blue material tiles. Each tile uses explicit pixel highlight, midtone, shadow and restrained wear.
+- Converted all 18 implemented weapons to authored low-poly JSON item models with actual cuboid geometry instead of flat generated sprites:
+  - Melee: Combat Knife, Billhook, Pipe Wrench, Cleaver, Machete, Hatchet, Sledgehammer, Crowbar, Scrap Spear, Riot Baton and Trench Shovel.
+  - Firearms: .22 Broomhandle, Mark VII, Service Rifle, Pump Shotgun, Improvised SMG, Hunting Rifle and Flare Gun.
+- Each weapon model has distinct structural parts such as blades/guards/handles or receivers/barrels/grips/magazines/stocks, rather than sharing a recolored base model.
+- Added complete GUI, ground, fixed, first-person right/left hand and third-person right/left hand display transforms to the low-poly weapon models.
+- Rebuilt the Scrapper as a multi-element industrial station model with a front intake, projected service slot, raised top housing and side mechanical details.
+- Recreated the Workbench as a multi-element fabrication station: reinforced tabletop, four frame legs, raised blueprint/work surface, lower equipment housing and vice/tool details.
+- The existing original 32px item art, 32px station textures and 64px Combat Knife Scavenger skin remain in place and are preserved by the asset generator.
 
-## Presentation and validation
+## Validation
 
-- The `WINTERFALL` creative tab continues to expose every registered player-facing item in a logical order.
-- `./gradlew clean build` with Temurin Java 17 completed successfully on September 22, 2026.
-- `runClient` was launched after the resource overhaul. It did not emit a WinterFall resource/model/renderer error before the intentional 35-second test timeout.
-
-## Remaining visual work
-
-- Current firearms use polished 2D held-item transforms; future high-priority work is selective 3D geometry for larger firearms and stations.
-- Additional enemy archetypes need their own renderer textures and spawn eggs once implemented.
-- Original `.ogg` audio remains intentionally external as documented in `AUDIO_ASSETS.md`.
+- Java: Temurin Java 17 at `/usr/lib/jvm/java-17-temurin-jdk`.
+- `./gradlew clean build` completed successfully on September 22, 2026.
+- Output JAR produced: `build/libs/winterfall-0.1.0.jar`.
+- `./gradlew runClient` launched successfully, initialized Forge 47.4.10 / Minecraft 1.20.1 and reached the client startup path without WinterFall model, texture, renderer or resource-load errors in the captured output. A manual in-game visual pass remains recommended for final transform tuning.
+- Existing Java deprecation warnings remain unrelated to this asset pass; no compilation errors occurred.
 
 ## Git
 
-- Branch: `codex/winterfall-primary`
-- Visual overhaul commit: `060985d art: overhaul WinterFall item and station assets`.
-- Push completed to `origin/codex/winterfall-primary`.
-- `AI_WORKSPACE.md` remains unmodified and uncommitted.
+- Current branch: `codex/winterfall-primary`.
+- Visual-model commit pushed: `0226c7c`.
+- `AI_WORKSPACE.md` remains untracked and intentionally untouched.
 
-## Next priority
+## Remaining visual priorities
 
-Install the build below, inspect the creative tab and held-item readability in the test instance, then tune based on in-game screenshots before expanding enemy content.
+1. Inspect the 3D weapons, Scrapper and Workbench in the test instance and tune transforms/scale from actual screenshots if needed.
+2. Give future enemy archetypes their own original textures, equipment layers and differentiated spawn eggs.
+3. Add original `.ogg` files to the already prepared sound infrastructure, as documented in `AUDIO_ASSETS.md`.
 
 ## Install latest JAR
 
