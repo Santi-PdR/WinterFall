@@ -1,42 +1,66 @@
-# WinterFall — deep visual reconstruction report
+# WinterFall — visual resource stabilization report
 
-## Last completed turn
+## Scope
 
-- Branch confirmed: `codex/winterfall-primary`.
-- Completed and pushed commit `0226c7c assets: rebuild WinterFall weapon visuals with 3D low-poly models and workbench`.
-- No new gameplay systems were added during this visual pass.
+This turn intentionally added **no gameplay, weapons, perks, enemies or new content**. It only corrected the visual-resource failure that caused magenta/black WinterFall models in the current build.
 
-## Assets rebuilt
+## Root cause
 
-- Added an original 64×64 `weapon_atlas.png` with cold steel, gunmetal, leather, worn wood, rust, warning-red, cloth and cold-blue material tiles. Each tile uses explicit pixel highlight, midtone, shadow and restrained wear.
-- Converted all 18 implemented weapons to authored low-poly JSON item models with actual cuboid geometry instead of flat generated sprites:
-  - Melee: Combat Knife, Billhook, Pipe Wrench, Cleaver, Machete, Hatchet, Sledgehammer, Crowbar, Scrap Spear, Riot Baton and Trench Shovel.
-  - Firearms: .22 Broomhandle, Mark VII, Service Rifle, Pump Shotgun, Improvised SMG, Hunting Rifle and Flare Gun.
-- Each weapon model has distinct structural parts such as blades/guards/handles or receivers/barrels/grips/magazines/stocks, rather than sharing a recolored base model.
-- Added complete GUI, ground, fixed, first-person right/left hand and third-person right/left hand display transforms to the low-poly weapon models.
-- Rebuilt the Scrapper as a multi-element industrial station model with a front intake, projected service slot, raised top housing and side mechanical details.
-- Recreated the Workbench as a multi-element fabrication station: reinforced tabletop, four frame legs, raised blueprint/work surface, lower equipment housing and vice/tool details.
-- The existing original 32px item art, 32px station textures and 64px Combat Knife Scavenger skin remain in place and are preserved by the asset generator.
+The real instance log at `/home/Santipdr/.sklauncher/instances/test-1/logs/latest.log` identified the exact error:
+
+```text
+Using missing texture, unable to load winterfall:item/weapon_atlas
+java.io.IOException: Could not load image: Corrupt PNG
+```
+
+The preceding low-poly pass wrote the eight material palette entries for `weapon_atlas.png` as RGB triples inside a PNG encoder that requires RGBA pixels. This made scanlines variable-width, producing a structurally corrupt PNG. Minecraft therefore replaced the shared atlas with its magenta/black missing texture. Every one of the 18 low-poly weapon models that referenced the atlas was affected.
+
+A second latent issue was also corrected: the atlas UVs were authored in image pixel coordinates (`0..64`) while Minecraft JSON item-model UVs use normalized `0..16` coordinates.
+
+## Assets affected
+
+- All 18 low-poly 3D weapons: Combat Knife, Billhook, Pipe Wrench, Cleaver, Machete, Hatchet, Sledgehammer, Crowbar, Scrap Spear, Riot Baton, Trench Shovel, .22 Broomhandle, Mark VII, Service Rifle, Pump Shotgun, Improvised SMG, Hunting Rifle and Flare Gun.
+- `assets/winterfall/textures/item/weapon_atlas.png`.
+- The Scrapper and Workbench were inspected separately. Their block models use their own valid block textures and were not referenced by any missing-texture or blockstate error.
+
+## Corrections applied
+
+- Kept the shared `weapon_atlas.png`; it was **not abandoned**, because the failure was encoding and UV normalization rather than the atlas strategy itself.
+- Corrected the atlas generator so every palette colour is expanded to a four-channel RGBA value before serialization.
+- Regenerated the 64×64 atlas. It now decodes as a valid RGBA PNG both from the source tree and from the packaged JAR.
+- Converted all shared atlas UV rectangles to Minecraft's valid normalized `0..16` range.
+- Regenerated all 18 3D weapon item models from the corrected generator.
+- Added `tools/verify_winterfall_resources.py`, a dependency-free validation tool that checks PNG signature/chunks/CRC/decoded scanline length, JSON, WinterFall model and texture references, blockstate targets and `0..16` face UVs.
 
 ## Validation
 
-- Java: Temurin Java 17 at `/usr/lib/jvm/java-17-temurin-jdk`.
-- `./gradlew clean build` completed successfully on September 22, 2026.
-- Output JAR produced: `build/libs/winterfall-0.1.0.jar`.
-- `./gradlew runClient` launched successfully, initialized Forge 47.4.10 / Minecraft 1.20.1 and reached the client startup path without WinterFall model, texture, renderer or resource-load errors in the captured output. A manual in-game visual pass remains recommended for final transform tuning.
-- Existing Java deprecation warnings remain unrelated to this asset pass; no compilation errors occurred.
+- Java: Temurin 17 at `/usr/lib/jvm/java-17-temurin-jdk`.
+- `./gradlew clean build`: **BUILD SUCCESSFUL** on September 23, 2026.
+- Packaged JAR: `build/libs/winterfall-0.1.0.jar`.
+- The resource validator passes for the source resources.
+- All 32 packaged WinterFall PNG resources, including the atlas, were decoded directly from the resulting JAR successfully.
+- `./gradlew runClient`: **BUILD SUCCESSFUL**. The client completed resource loading, joined an integrated world and shut down cleanly.
+- The new `runClient` log contains no `Corrupt PNG`, `unable to load winterfall:item/weapon_atlas`, `Missing textures in model winterfall`, missing variant, or WinterFall model-load error.
+- A captured in-game first-person test confirmed a low-poly weapon renders with its intended cold-steel/gunmetal texture and no magenta/black fallback. The HUD remained functional.
+- A manual Creative-tab screenshot could not be completed because the dev client closed before the keyboard-driven inventory command was delivered. Its resource/model paths were nevertheless statically checked, and every model exposed by the tab now loads without the previous missing-atlas diagnostics.
+
+## Stations and Creative tab
+
+- Scrapper: six-element block model; own side/top/bottom textures; no missing-texture or blockstate error in the client logs.
+- Workbench: eleven-element block model; own side/top textures; no missing-texture or blockstate error in the client logs.
+- WINTERFALL tab: all registered 3D weapon entries use validated models and a valid packaged atlas. Manual visual organization/tuning remains a sensible next inspection after installing this fixed JAR.
 
 ## Git
 
-- Current branch: `codex/winterfall-primary`.
-- Visual-model commit pushed: `0226c7c`.
+- Branch: `codex/winterfall-primary`.
+- Resource stabilization commit: `562958e fix: stabilize WinterFall weapon model textures`.
+- Report: committed and pushed with this stabilization delivery.
 - `AI_WORKSPACE.md` remains untracked and intentionally untouched.
 
-## Remaining visual priorities
+## Remaining work
 
-1. Inspect the 3D weapons, Scrapper and Workbench in the test instance and tune transforms/scale from actual screenshots if needed.
-2. Give future enemy archetypes their own original textures, equipment layers and differentiated spawn eggs.
-3. Add original `.ogg` files to the already prepared sound infrastructure, as documented in `AUDIO_ASSETS.md`.
+- No visual resources are currently known to be missing or corrupt.
+- The next work should be a user-side check of the WINTERFALL tab using this JAR, with screenshots if any held-item scale, station geometry or artistic readability needs adjustment. Do not expand content before that check.
 
 ## Install latest JAR
 
