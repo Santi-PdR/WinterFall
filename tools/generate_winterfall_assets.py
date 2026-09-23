@@ -185,3 +185,25 @@ for y in range(64):
     for x in range(64):
         if (x*7+y*11)%17==0: mob[y][x]=(31,37,40,255)
 png(ROOT/"textures/entity/combat_knife_scavenger.png",mob,64,64)
+
+# 64px atlas dedicated to low-poly weapon faces. Each tile has a deliberate highlight/mid/shadow treatment.
+atlas = [[(24,29,33,255) for _ in range(64)] for _ in range(64)]
+tiles = [
+    ((0,0),(96,116,124),(151,178,183),(47,57,63)),      # cold steel
+    ((16,0),(47,57,62),(77,90,94),(25,31,35)),           # gunmetal
+    ((32,0),(105,72,48),(145,104,70),(56,39,30)),        # leather grip
+    ((48,0),(103,71,49),(149,105,73),(57,39,30)),        # worn wood
+    ((0,16),(132,68,43),(174,92,54),(65,38,30)),         # rust
+    ((16,16),(155,54,42),(213,121,50),(69,38,29)),       # warning
+    ((32,16),(62,82,89),(91,115,121),(32,43,47)),        # cloth
+    ((48,16),(79,145,164),(145,203,211),(35,76,89)),     # cold blue paint
+]
+for (ox,oy), mid, hi, shadow in tiles:
+    for y in range(16):
+        for x in range(16):
+            atlas[oy+y][ox+x] = mid
+            if x in (0,1) or y in (0,1): atlas[oy+y][ox+x] = hi
+            if x in (14,15) or y in (14,15): atlas[oy+y][ox+x] = shadow
+            if (x*5+y*3+ox+oy) % 17 == 0: atlas[oy+y][ox+x] = shadow
+            if (x+y) % 13 == 0: atlas[oy+y][ox+x] = hi
+png(ROOT/"textures/item/weapon_atlas.png",atlas,64,64)
